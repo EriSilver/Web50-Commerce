@@ -1,0 +1,65 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    {% if info %}{{info.name}}{% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if msg %}
+        <div><h1 style="color:red;">{{ msg|safe }}</h1></div>
+    {% endif %}
+
+    {% if info %}
+        <table>
+            <tr>
+                <td><img src="{{info.image}}" alt="Image not available." style="max-width: 500px; max-height: 700px;"></td>
+                <td><h1>{{info.name}}</h1>
+                    {{info.description}}<br>
+                    Created on: {{info.date|date}}
+                    <br>
+                    {% if info.bid %}Highest Bid: ${{info.bid.bid}} {%else%}Starting Price: ${{info.min_price}} {% endif %} 
+                    <br>
+                    {% if user.is_authenticated %}
+                        {% if info.active %}
+                            <div>
+                                <form method="POST" action="/{{info.name}}">
+                                    {%csrf_token%}
+                                    {% if info.creator.username != user.username %}
+                                        <br><button name="watchlist">Add To Watchlist</button><br><br>
+                                        <input type="number" min="{% if info.bid %}{{info.bid.bid}}{%else%}{{info.min_price}}{% endif %}" name="bid" step="0.01" value="{{bid}}">
+                                        <button name="addbid">Submit bid</button><br><br>
+                                    {% elif info.creator.username == user.username %}
+                                        <button name="closeauction">Close Auction</button><br><br>
+                                    {% endif %}
+                                    <textarea name="comment" placeholder="Comment...">{{comment}}</textarea>
+                                    <button name="addcomment">Add Comment</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <h1>
+                                <!-----------CLOSED AUCTION----------------------->
+                                {% if not info.bid %}
+                                    No BIDS AND NO WINNER
+                                {% elif user.username == info.bid.buser.username %}
+                                    YOU ARE THE WINNER!
+                                {% else %}
+                                    THE WINNER IS: {{info.bid.buser.username}}!
+                                {% endif %}
+                            </h1>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        
+        {% if comments %}
+            <br><br><h2>Comments</h2>
+            {% for e in comments %}
+                <div>
+                    <div><p><u><b>{{e.cuser.username}}</b></u>   <i>{{e.cdate}}</i></p></div>
+                    <div>{{e.comment}}</div>
+                </div><br>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

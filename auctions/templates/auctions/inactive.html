@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{%block title%}Closed Auctions{%endblock%}
+
+{% block body %}
+    {% if listings %}
+        <h2>Inactive Listings</h2>
+
+        <table style="width:100%;">
+            {% for e in listings %}
+                <tr>
+                    <td style="width: 30%"><a href="/{{e.name}}"><img src="{{e.image}}" alt="Image not available." style="max-height:200px; max-width:400px;"></a></td>
+                    <td>
+                        <a href="/{{e.name}}">
+                            <table>
+                                <tr>
+                                    <th>{{e.name}}</th>
+                                </tr>
+                                {% if e.description %}
+                                    <tr>
+                                        <td>{{e.description}}</td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <th>{% if not e.bid %}${{e.min_price}}{% else %}${{e.bid.bid}}{% endif %}</th>
+                                </tr>
+                                <tr>
+                                    <td><i>Created on: {{e.date}} <br>By: {{e.creator.username}}</i></td>
+                                </tr>
+                            </table>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {%else%}
+        <h1>No Inactive Listings</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{%extends "auctions/layout.html"%}
+
+{% block title %}
+    Active Categories
+{% endblock %}
+
+{% block body %}
+    {% if cats %}
+        <h1>Active categories</h1>
+        <br>
+        {% for cat in cats %}
+            <a href="/cat{{cat}}" style="padding: 10px;">{{cat}}</a><br>
+        {%endfor%}
+    {% else %}
+        <h1>No Active Listings</h1>
+    {%endif%}
+{% endblock %}

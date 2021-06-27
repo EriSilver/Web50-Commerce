@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{%block title%}Watchlist{%endblock%}
+
+{% block body %}
+    
+    {% if listings %}
+        <table style="width:100%; text-align:center;">
+            {% for e in listings %}
+                <tr >
+                    <td style="width: 30%"><a href="/{{e.witem.name}}"><img src="{{e.witem.image}}" alt="Image not available." style="max-height:150px; max-width:400px; opacity:{% if e.witem.active == True%}1;{%else%}0.3;{%endif%}"></a></td>
+                    <td>
+                        <a href="/{{e.witem.name}}">
+                            <table>
+                                <tr>
+                                    <th>{{e.witem.name}}</th>
+                                </tr>
+                                <tr>
+                                    <th>{% if not e.witem.bid %}${{e.witem.min_price}}{% else %}${{e.witem.bid.bid}}{% endif %}</th>
+                                </tr>
+                            </table>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {%else%}
+        <h2>No items in your watchlist</h2>
+    {% endif %}
+{% endblock %}
